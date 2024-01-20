@@ -1,0 +1,489 @@
+#1470. Shuffle the Array
+
+class Solution {
+    public int[] shuffle(int[] nums, int n) {
+        int[] ans = new int[nums.length];
+        for (int i = 0; i < n; i++) {
+            ans[2 * i] = nums[i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            ans[(2 * i) + 1] = nums[n + i];
+        }
+        return ans;
+    }
+}
+_________________________________________________________________________________________________
+153. Find Minimum in Rotated Sorted Array
+
+class Solution {
+    public int findMin(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left < right) {
+            int mid = left + (right - left) / 2; // to prevent overflow while calc mid
+
+            if (nums[mid] < nums[right]) {
+                // min on LHS incl mid
+                right = mid;
+            } else {
+                // min on RHS, excl mid
+                left = mid + 1;
+            }
+        }
+
+        return nums[left];
+    }
+}
+_________________________________________________________________________________________________
+
+1394. Find Lucky Integer in an Array
+
+class Solution {
+    public int findLucky(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int num: arr){
+          map.put(num, map.getOrDefault(num,0)+1);
+        }
+        int maxLuck = -1;
+        // for(Map.Entry<Integer,Integer> entry: map.entrySet()){
+        //     int num = entry.getKey();
+        //     int frequency = entry.getValue();
+
+        //     if(num == frequency && num > maxLuck){
+        //         maxLuck = num;
+        //     }
+        // }
+        
+        for(int num : arr){
+            int frequency = map.get(num);
+
+            if(num == frequency && num > maxLuck){
+                maxLuck = num;
+            }
+        }
+        return maxLuck;
+    }
+}
+_________________________________________________________________________________________________
+136. Single Number:
+class Solution {
+    public int singleNumber(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int singleNum = 0;
+        // int count = 1;
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            int keys = entry.getKey();
+            int freq = entry.getValue();
+
+            if (freq == 1) {
+                singleNum = keys;
+            }
+        }
+        return singleNum;
+    }
+}
+_________________________________________________________________________________________________
+260. Single Number III
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        //get the size of the single occurance
+        int count = 0;
+        for(int occ : map.values()){
+            if(occ == 1){
+                count++;
+            }
+        }
+        int[] singleNumArr = new int[count];
+
+        int i = 0;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            // int keys = entry.getKey();
+            int freq = entry.getValue();
+
+            if (freq == 1) {
+                singleNumArr[i++] = entry.getKey();
+            }
+        }
+        return singleNumArr;
+    }
+}
+
+_________________________________________________________________________________________________
+DAY 3:
+189. Rotate Array:
+Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+
+class Solution {
+   public void rotate(int[] nums, int k) {
+    int n = nums.length;
+    k = k % n; // Handling the case when k is larger than the array size
+
+    // Reverse the entire array
+    reverse(nums, 0, n - 1);
+
+    // Reverse the first k elements
+    reverse(nums, 0, k - 1);
+
+    // Reverse the remaining elements
+    reverse(nums, k, n - 1);
+}
+
+public void reverse(int[] nums, int start, int end) {
+    while (start < end) {
+        int temp = nums[start];
+        nums[start] = nums[end];
+        nums[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+}
+
+167. Two Sum II - Input Array Is Sorted
+
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int size = numbers.length;
+        int index = 0, si = 0;
+
+        int[] ans = new int[2];
+
+        for (int i = 0; i < size - 1; i++) {
+            int tar = target - numbers[index];
+            si = binarySearch(numbers, 0, size - 1, tar);
+
+            if (si < 0) {
+                index++;
+            }
+            if (si == index) {
+                si += 1;
+            }
+        }
+
+        ans[0] = index + 1;
+        ans[1] = si + 1;
+        return ans;
+    }
+
+    public int binarySearch(int[] arr, int left, int right, int tar) {
+        while (left <= right) {
+            int mid = (left + right) / 2;
+
+            if (arr[mid] == tar) {
+                return mid;
+            } else if (arr[mid] < tar) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+}
+_________________________________________________________________________________________________
+1. Two Sum
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Solution {
+
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> numMap = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            
+            if (numMap.containsKey(complement)) {
+                return new int[]{numMap.get(complement), i};
+            }
+
+            numMap.put(nums[i], i);
+        }
+
+        // If no solution is found, return an empty array or null
+        return new int[0];
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        int[] nums = {2, 7, 11, 15};
+        int target = 9;
+        int[] result = solution.twoSum(nums, target);
+
+        System.out.println(java.util.Arrays.toString(result)); // Output: [0, 1]
+    }
+}
+*******OR******
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int[] ans = new int[2];
+
+        for(int i = 0 ; i < nums.length;i++){
+            int tar = target - nums[i];
+
+            if(map.containsKey(tar)){
+                ans[0] = map.get(tar);
+                ans[1] = i;
+                break;
+            }
+            map.put(nums[i], i);
+        }
+        return ans;
+    }
+}
+_________________________________________________________________________________________________
+202. Happy Number
+Solved
+Easy
+Topics
+Companies
+Write an algorithm to determine if a number n is happy.
+
+A happy number is a number defined by the following process:
+
+Starting with any positive integer, replace the number by the sum of the squares of its digits.
+Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+Those numbers for which this process ends in 1 are happy.
+Return true if n is a happy number, and false if not.
+
+***********
+
+class Solution {
+    public boolean isHappy(int n) {
+       HashSet<Integer> set = new HashSet<>();
+
+       while( n != 1 && !set.contains(n)){
+           set.add(n);
+           n = calSquare(n);
+       }
+       return n == 1;
+    }
+
+    public int calSquare(int n){
+        int sum = 0;
+        while( n > 0){
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        return sum;
+    }
+}
+_________________________________________________________________________________________________
+
+//  Definition for singly-linked list.
+//  public class ListNode {
+//     int val;
+//       ListNode next;
+//      ListNode() {}
+//       ListNode(int val) { this.val = val; }
+//       ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+//   }
+ 
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}
+_________________________________________________________________________________________________
+206. Reverse Linked List
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}
+_________________________________________________________________________________________________
+234. Palindrome Linked List
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+       ListNode slow = head , fast = head;
+
+        if(head == null || head.next == null){
+            return true;
+        }
+
+        while(fast.next != null && fast.next.next != null){
+           slow = slow.next;
+           fast = fast.next.next;
+        }
+
+        ListNode first = reverseofLL(slow.next);
+        ListNode second = head;
+
+        while(first != null && second != null){
+            if(first.val != second.val){
+                return false;
+            }
+            first = first.next;
+            second = second.next;
+        }
+        return true;
+
+    }
+
+    public ListNode reverseofLL (ListNode head){
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while(curr != null){
+            ListNode next = curr.next;
+            curr.next = prev;
+
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+}
+
+_________________________________________________________________________________________________
+203. Remove Linked List Elements
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if(head == null) return null;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode curr = dummy;
+
+        while(curr.next != null){
+            if(curr.next.val == val){
+                curr.next = curr.next.next;
+            }else{
+                curr = curr.next;
+            }
+        }
+        return dummy.next;
+    }
+}
+_________________________________________________________________________________________________
+83. Remove Duplicates from Sorted List
+Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode curr = head;
+
+        while(curr != null && curr.next != null ){
+            if(curr.val == curr.next.val){
+                curr.next = curr.next.next;
+            }else{
+                curr = curr.next;
+            }
+        }
+        return head;
+    }
+}
+_________________________________________________________________________________________________
+160. Intersection of Two Linked Lists
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode currA = headA;
+        ListNode currB = headB;
+        if(headA == null || headB == null ){
+            return null;
+        }
+        while(currA != currB){
+            if(currA == null){
+                currA = headB;
+            }else{
+                currA = currA.next;
+            }
+
+
+            if(currB == null){
+                currB = headA;
+            }else{
+                currB = currB.next;
+            }
+        }
+        return currA;
+    }
+}

@@ -49,11 +49,12 @@ public class majorityElement {
             }
         }
 
-        if (count > n / 2) {
-            return candidate;
-        } else {
-            return -1;
-        }
+        // if (count > n / 2) {
+        //     return candidate;
+        // } else {
+        //     return -1;
+        // }
+        return candidate;
     }
 }
 // time complexity: O(n)
